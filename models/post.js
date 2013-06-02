@@ -46,7 +46,8 @@ Post.prototype.save = function(callback) {
 		});
 	});
 };
-Post.getAll = function(name, callback) {//读取文章及其相关信息
+
+Post.getTen = function(name, page, callback) {
   //打开数据库
   mongodb.open(function (err, db) {
     if (err) {
@@ -63,7 +64,7 @@ Post.getAll = function(name, callback) {//读取文章及其相关信息
         query.name = name;
       }
       //根据 query 对象查询文章
-      collection.find(query).sort({
+      collection.find(query,{skip:(page-1)*10,limit:10}).sort({
         time: -1
       }).toArray(function (err, docs) {
         mongodb.close();
@@ -78,6 +79,7 @@ Post.getAll = function(name, callback) {//读取文章及其相关信息
     });
   });
 };
+
 
 Post.getOne = function(name, day, title, callback) {
 	mongodb.open(function(err, db) {
